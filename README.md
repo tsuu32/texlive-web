@@ -19,18 +19,12 @@ cd texlive-web
 wget http://mirrors.ctan.org/systems/texlive/tlnet/tlpkg/texlive.tlpdb
 ```
 
-3. Get Gin (https://github.com/gin-gonic/gin):
+3. Build server:
 ```
-go get -u github.com/gin-gonic/gin
-go get -u github.com/gin-gonic/contrib/static
-```
-
-4. Build server:
-```
-go build main.go
+go build
 ```
 
-5. Build client:
+4. Build client:
 ```
 cd client
 yarn install
@@ -38,9 +32,9 @@ yarn build
 cd ..
 ```
 
-6. Run sever:
+5. Run sever:
 ```
-./main
+./texlive-web
 ```
 
 Visit localhost:5000 and enjoy texlive-web!
