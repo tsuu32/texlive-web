@@ -24,17 +24,19 @@ const useStyles = makeStyles(theme => ({
   drawerPaper: {
     width: drawerWidth
   },
-  toolbar: theme.mixins.toolbar
+  toolbar: {
+    ...theme.mixins.toolbar,
+    display: "flex",
+    alignItems: "center"
+  }
 }));
 
 function SideBar(props) {
   const classes = useStyles();
+
   const drawer = (
     <>
-      <div
-        className={classes.toolbar}
-        style={{ display: "flex", alignItems: "center" }}
-      >
+      <div className={classes.toolbar}>
         <Typography variant="h6" style={{ paddingLeft: 10 }}>
           TeX Live Web
         </Typography>

@@ -30,7 +30,9 @@ const useStyles = makeStyles(theme => ({
   backButton: {
     marginRight: theme.spacing(2)
   },
-  toolbar: theme.mixins.toolbar
+  headerTitle: {
+    flexGrow: 1
+  }
 }));
 
 function TlpHeader(props) {
@@ -43,6 +45,7 @@ function TlpHeader(props) {
   };
 
   const classes = useStyles();
+
   return (
     <>
       <IconButton
@@ -55,7 +58,7 @@ function TlpHeader(props) {
         <ArrowBackIcon />
       </IconButton>
 
-      <Typography variant="h6" style={{ flexGrow: 1 }}>
+      <Typography variant="h6" className={classes.headerTitle}>
         {props.match.params.name}
       </Typography>
     </>
@@ -64,6 +67,7 @@ function TlpHeader(props) {
 
 function TeXLiveWebHeader(props) {
   const classes = useStyles();
+
   return (
     <>
       <IconButton
@@ -76,7 +80,7 @@ function TeXLiveWebHeader(props) {
         <MenuIcon />
       </IconButton>
 
-      <Typography variant="h6" style={{ flexGrow: 1 }}>
+      <Typography variant="h6" className={classes.headerTitle}>
         TeX Live Web
       </Typography>
     </>
@@ -105,7 +109,10 @@ function NavBar() {
             <Route exact path="/tlp/:name" component={TlpHeader} />
             <Route
               render={props => (
-                <TeXLiveWebHeader {...props} handleDrawerOpen={handleDrawerOpen} />
+                <TeXLiveWebHeader
+                  {...props}
+                  handleDrawerOpen={handleDrawerOpen}
+                />
               )}
             />
           </Switch>
