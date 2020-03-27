@@ -1,23 +1,18 @@
 import React, { useState, useEffect } from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import NavBar from "./components/NavBar";
 
 import { makeStyles } from "@material-ui/core/styles";
 import {
-  AppBar,
-  Toolbar,
   Typography,
   Button,
   ButtonGroup,
-  IconButton,
-  Drawer,
-  Divider,
   List,
   ListItem,
   ListItemText,
   Paper,
   Grid,
-  Hidden,
   Menu,
   MenuItem
   // TableContainer,
@@ -30,42 +25,13 @@ import {
   // TablePagination
 } from "@material-ui/core";
 import MaterialTable from "material-table";
-import MenuIcon from "@material-ui/icons/Menu";
-import { Switch, Route, Redirect, Link, NavLink } from "react-router-dom";
-
-const drawerWidth = 240;
+import { Switch, Route, Redirect, Link } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   root: {
     display: "flex"
   },
-  drawer: {
-    [theme.breakpoints.up("sm")]: {
-      width: drawerWidth,
-      flexShrink: 0
-    }
-  },
-  drawerPaper: {
-    width: drawerWidth
-  },
-  appBar: {
-    backgroundColor: "#1179b6",
-    [theme.breakpoints.up("sm")]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth
-    }
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up("sm")]: {
-      display: "none"
-    }
-  },
   toolbar: theme.mixins.toolbar,
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: "center"
-  },
   table: {
     minWidth: 650
   },
@@ -449,7 +415,7 @@ function Tlp(props) {
                     )}
                 </List>
               </Paper>
-            </Grid>{" "}
+            </Grid>
           </Grid>
 
           <Typography variant="h6" style={{ marginBottom: 10 }}>
@@ -467,7 +433,7 @@ function Tlp(props) {
               >
                 <Typography variant="body1">{tlp.longdesc}</Typography>
               </Paper>
-            </Grid>{" "}
+            </Grid>
           </Grid>
         </div>
       )}
@@ -476,101 +442,11 @@ function Tlp(props) {
 }
 
 function App() {
-  const [open, setOpen] = useState(false);
-  // useCallback is better
-  // https://sbfl.net/blog/2019/02/20/react-only-tutorial/
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
   const classes = useStyles();
-
-  const drawer = (
-    <>
-      <div
-        className={classes.toolbar}
-        style={{ display: "flex", alignItems: "center" }}
-      >
-        <Typography variant="h6" style={{ paddingLeft: 10 }}>
-          TeX Live Web
-        </Typography>
-      </div>
-      <Divider />
-      <List>
-        {[
-          "All",
-          "Packages",
-          "Collections",
-          "Schemes",
-          "ConTeXts",
-          "TLCores"
-        ].map((text, index) => (
-          <ListItem
-            button
-            key={text}
-            to={`/${text.toLowerCase()}`}
-            activeStyle={{ color: "#1178b6" }}
-            component={NavLink}
-            onClick={handleDrawerClose}
-          >
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-    </>
-  );
 
   return (
     <div className={classes.root}>
-      <nav className={classes.drawer}>
-        <Hidden smUp>
-          <Drawer
-            variant="temporary"
-            open={open}
-            onClose={handleDrawerClose}
-            classes={{
-              paper: classes.drawerPaper
-            }}
-            anchor="left"
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden xsDown>
-          <Drawer
-            variant="permanent"
-            classes={{
-              paper: classes.drawerPaper
-            }}
-            anchor="left"
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
-
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <IconButton
-            className={classes.menuButton}
-            onClick={handleDrawerOpen}
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" style={{ flexGrow: 1 }}>
-            TeX Live Web
-          </Typography>
-          <Button color="inherit" href="https://www.tug.org/texlive/">
-            Get TeX Live
-          </Button>
-        </Toolbar>
-      </AppBar>
+      <NavBar />
 
       <Switch>
         <Redirect exact from="/" to="/all" />
