@@ -207,25 +207,6 @@ func (tlp TLPOBJ) printInfo() {
 	fmt.Println()
 }
 
-func handleTlps(c *gin.Context, db TLPDB, category string) {
-	keys := make([]string, 0)
-	for k, v := range db.tlps {
-		if v.Category == category {
-			keys = append(keys, k)
-		}
-	}
-	sort.Strings(keys)
-	var tlps []gin.H
-	for _, k := range keys {
-		tlps = append(tlps, gin.H{
-			"name":      db.tlps[k].Name,
-			"revision":  db.tlps[k].Revision,
-			"shortdesc": db.tlps[k].Shortdesc,
-		})
-	}
-	c.JSON(http.StatusOK, tlps)
-}
-
 func serve(db TLPDB, addr string) {
 	router := gin.Default()
 
@@ -240,7 +221,7 @@ func serve(db TLPDB, addr string) {
 	{
 		api.GET("/", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{
-				"message": "pong",
+				"status": "☃️",
 			})
 		})
 		api.GET("/all", func(c *gin.Context) {
@@ -259,21 +240,6 @@ func serve(db TLPDB, addr string) {
 				})
 			}
 			c.JSON(http.StatusOK, all)
-		})
-		api.GET("/packages", func(c *gin.Context) {
-			handleTlps(c, db, "Package")
-		})
-		api.GET("/collections", func(c *gin.Context) {
-			handleTlps(c, db, "Collection")
-		})
-		api.GET("/schemes", func(c *gin.Context) {
-			handleTlps(c, db, "Scheme")
-		})
-		api.GET("/contexts", func(c *gin.Context) {
-			handleTlps(c, db, "ConTeXt")
-		})
-		api.GET("/tlcores", func(c *gin.Context) {
-			handleTlps(c, db, "TLCore")
 		})
 		api.GET("/tlp/:name", func(c *gin.Context) {
 			c.JSON(http.StatusOK, db.tlps[c.Param("name")])

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import NavBar from "./components/NavBar";
@@ -12,17 +12,8 @@ import {
   ListItem,
   ListItemText,
   Paper,
-  Grid,
   Menu,
   MenuItem
-  // TableContainer,
-  // Table,
-  // TableHead,
-  // TableBody,
-  // TableRow,
-  // TableCell,
-  // TableFooter,
-  // TablePagination
 } from "@material-ui/core";
 import MaterialTable from "material-table";
 import { Switch, Route, Redirect, Link } from "react-router-dom";
@@ -31,13 +22,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: "flex"
   },
-  toolbar: theme.mixins.toolbar,
-  table: {
-    minWidth: 650
-  },
-  tableHeader: {
-    fontWeight: "bold"
-  }
+  toolbar: theme.mixins.toolbar
 }));
 
 function Demo() {
@@ -63,79 +48,7 @@ function Demo() {
   );
 }
 
-// function Tlps(api, category) {
-//   const [packages, setPackages] = useState([]);
-
-//   useEffect(() => {
-//     const f = async () => {
-//       const res = await fetch(`/api/${api}`);
-//       const json = await res.json();
-//       setPackages(json);
-//     };
-//     f();
-//   }, [api, setPackages]);
-
-//   const [page, setPage] = React.useState(0);
-//   const handleChangePage = (event, newPage) => {
-//     setPage(newPage);
-//   };
-
-//   const classes = useStyles();
-//   return (
-//     <div style={{ flexGrow: 1 }}>
-//       <div className={classes.toolbar} />
-//       <TableContainer component={Paper}>
-//         <Table className={classes.table} aria-label="simple table">
-//           <TableHead>
-//             <TableRow>
-//               <TableCell>{category}</TableCell>
-//               <TableCell>Revision</TableCell>
-//               <TableCell>ShortDesc</TableCell>
-//             </TableRow>
-//           </TableHead>
-//           <TableBody>
-//             {packages.slice(page * 20, page * 20 + 20).map(row => (
-//               <TableRow key={row.name}>
-//                 <TableCell component="th" scope="row">
-//                   <Link to={`/tlp/${row.name}`}>{row.name}</Link>
-//                 </TableCell>
-//                 <TableCell>{row.revision}</TableCell>
-//                 <TableCell>{row.shortdesc}</TableCell>
-//               </TableRow>
-//             ))}
-//           </TableBody>
-//           <TableFooter>
-//             <TableRow>
-//               <TablePagination
-//                 colSpan={3}
-//                 count={packages.length}
-//                 rowsPerPage={20}
-//                 rowsPerPageOptions={[20]}
-//                 page={page}
-//                 onChangePage={handleChangePage}
-//               />
-//             </TableRow>
-//           </TableFooter>
-//         </Table>
-//       </TableContainer>
-//     </div>
-//   );
-// }
-
-function All() {
-  const [all, setAll] = useState([]);
-
-  useEffect(() => {
-    const f = async () => {
-      const res = await fetch("/api/all");
-      res
-        .json()
-        .then(res => setAll(res))
-        .catch(err => console.log(err));
-    };
-    f();
-  }, [setAll]);
-
+function All(props) {
   const classes = useStyles();
   return (
     <div style={{ flexGrow: 1 }}>
@@ -153,13 +66,13 @@ function All() {
           { title: "Revision", field: "revision", type: "numeric" },
           { title: "ShortDesc", field: "shortdesc" }
         ]}
-        data={all}
+        data={props.all}
         title={"All"}
         options={{
           draggable: false,
           emptyRowsWhenPaging: false,
           pageSize: 20,
-          pageSizeOptions: [10, 20, 50],
+          pageSizeOptions: [20, 50, 100],
           thirdSortClick: false
         }}
       />
@@ -167,20 +80,7 @@ function All() {
   );
 }
 
-function Tlps(api, category) {
-  const [tlps, setTlps] = useState([]);
-
-  useEffect(() => {
-    const f = async () => {
-      const res = await fetch(`/api/${api}`);
-      res
-        .json()
-        .then(res => setTlps(res))
-        .catch(err => console.log(err));
-    };
-    f();
-  }, [api, setTlps]);
-
+function Tlps(props, category, pageSizeOptions) {
   const classes = useStyles();
   return (
     <div style={{ flexGrow: 1 }}>
@@ -197,13 +97,13 @@ function Tlps(api, category) {
           { title: "Revision", field: "revision", type: "numeric" },
           { title: "ShortDesc", field: "shortdesc" }
         ]}
-        data={tlps}
+        data={props.tlps}
         title={`${category}s`}
         options={{
           draggable: false,
           emptyRowsWhenPaging: false,
-          pageSize: 10,
-          pageSizeOptions: [10, 20, 50],
+          pageSize: pageSizeOptions[0],
+          pageSizeOptions: pageSizeOptions,
           thirdSortClick: false
         }}
       />
@@ -211,24 +111,24 @@ function Tlps(api, category) {
   );
 }
 
-function Packages() {
-  return Tlps("packages", "Package");
+function Packages(props) {
+  return Tlps(props, "Package", [20, 50, 100]);
 }
 
-function Collections() {
-  return Tlps("collections", "Collection");
+function Collections(props) {
+  return Tlps(props, "Collection", [20, 50]);
 }
 
-function Schemes() {
-  return Tlps("schemes", "Scheme");
+function Schemes(props) {
+  return Tlps(props, "Scheme", [10]);
 }
 
-function ConTeXts() {
-  return Tlps("contexts", "ConTeXt");
+function ConTeXts(props) {
+  return Tlps(props, "ConTeXt", [20, 50]);
 }
 
-function TLCores() {
-  return Tlps("tlcores", "TLCore");
+function TLCores(props) {
+  return Tlps(props, "TLCore", [20, 50, 100]);
 }
 
 function Tlp(props) {
@@ -247,11 +147,11 @@ function Tlp(props) {
 
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleClick = event => {
+  const handleClickArch = event => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleCloseArch = () => {
     setAnchorEl(null);
   };
 
@@ -318,123 +218,119 @@ function Tlp(props) {
             )}
           </div>
 
-          <Grid container style={{ marginBottom: 10 }}>
-            <Grid item xs={12}>
-              <Paper
-                elevation={3}
-                style={{ padding: 15, backgroundColor: "#fbfbfe" }}
-              >
-                <Typography variant="h6">Version</Typography>
-                <Typography variant="body1">
-                  {(tlp.cataloguedata && tlp.cataloguedata.version) || "?"}
-                </Typography>
+          <Paper
+            elevation={3}
+            style={{
+              padding: 15,
+              marginBottom: 10,
+              backgroundColor: "#fbfbfe"
+            }}
+          >
+            <Typography variant="h6">Version</Typography>
+            <Typography variant="body1">
+              {(tlp.cataloguedata && tlp.cataloguedata.version) || "?"}
+            </Typography>
 
-                <Typography variant="h6">License</Typography>
-                <Typography variant="body1">
-                  {(tlp.cataloguedata && tlp.cataloguedata.license) || "?"}
-                </Typography>
+            <Typography variant="h6">License</Typography>
+            <Typography variant="body1">
+              {(tlp.cataloguedata && tlp.cataloguedata.license) || "?"}
+            </Typography>
 
-                <Typography variant="h6">Topics</Typography>
-                <Typography variant="body1">
-                  {(tlp.cataloguedata && tlp.cataloguedata.topics) || "?"}
-                </Typography>
+            <Typography variant="h6">Topics</Typography>
+            <Typography variant="body1">
+              {(tlp.cataloguedata && tlp.cataloguedata.topics) || "?"}
+            </Typography>
 
-                <Typography variant="h6">Dependencies</Typography>
-                <List>
-                  {tlp.depends &&
-                    tlp.depends.map(dep =>
-                      dep.endsWith(".ARCH") ? (
-                        <div key={dep}>
-                          <ListItem
-                            button
-                            onClick={handleClick}
-                            style={{
-                              paddingTop: 0,
-                              paddingBottom: 0,
-                              color: "-webkit-link",
-                              textDecoration: "underline"
-                            }}
+            <Typography variant="h6">Dependencies</Typography>
+            <List>
+              {tlp.depends &&
+                tlp.depends.map(dep =>
+                  dep.endsWith(".ARCH") ? (
+                    <div key={dep}>
+                      <ListItem
+                        button
+                        onClick={handleClickArch}
+                        style={{
+                          paddingTop: 0,
+                          paddingBottom: 0,
+                          color: "-webkit-link",
+                          textDecoration: "underline"
+                        }}
+                      >
+                        <ListItemText primary={dep} />
+                      </ListItem>
+                      <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleCloseArch}
+                        PaperProps={{
+                          style: {
+                            maxHeight: 200
+                          }
+                        }}
+                      >
+                        {[
+                          "aarch64-linux",
+                          "amd64-freebsd",
+                          "amd64-netbsd",
+                          "armhf-linux",
+                          "i386-cygwin",
+                          "i386-freebsd",
+                          "i386-linux",
+                          "i386-netbsd",
+                          "i386-solaris",
+                          "win32",
+                          "x86_64-cygwin",
+                          "x86_64-darwin",
+                          "x86_64-darwinlegacy",
+                          "x86_64-linux",
+                          "x86_64-linuxmusl",
+                          "x86_64-solaris"
+                        ].map(arch => (
+                          <MenuItem
+                            to={`/tlp/${dep.replace("ARCH", arch)}`}
+                            component={Link}
+                            key={arch}
+                            onClick={handleCloseArch}
                           >
-                            <ListItemText primary={dep} />
-                          </ListItem>
-                          <Menu
-                            anchorEl={anchorEl}
-                            open={Boolean(anchorEl)}
-                            onClose={handleClose}
-                            PaperProps={{
-                              style: {
-                                maxHeight: 200
-                              }
-                            }}
-                          >
-                            {[
-                              "aarch64-linux",
-                              "amd64-freebsd",
-                              "amd64-netbsd",
-                              "armhf-linux",
-                              "i386-cygwin",
-                              "i386-freebsd",
-                              "i386-linux",
-                              "i386-netbsd",
-                              "i386-solaris",
-                              "win32",
-                              "x86_64-cygwin",
-                              "x86_64-darwin",
-                              "x86_64-darwinlegacy",
-                              "x86_64-linux",
-                              "x86_64-linuxmusl",
-                              "x86_64-solaris"
-                            ].map(arch => (
-                              <MenuItem
-                                to={`/tlp/${dep.replace("ARCH", arch)}`}
-                                component={Link}
-                                key={arch}
-                                onClick={handleClose}
-                              >
-                                {dep.replace("ARCH", arch)}
-                              </MenuItem>
-                            ))}
-                          </Menu>
-                        </div>
-                      ) : (
-                        <ListItem
-                          button
-                          key={dep}
-                          to={`/tlp/${dep}`}
-                          component={Link}
-                          style={{
-                            paddingTop: 0,
-                            paddingBottom: 0,
-                            color: "-webkit-link",
-                            textDecoration: "underline"
-                          }}
-                        >
-                          <ListItemText primary={dep} />
-                        </ListItem>
-                      )
-                    )}
-                </List>
-              </Paper>
-            </Grid>
-          </Grid>
+                            {dep.replace("ARCH", arch)}
+                          </MenuItem>
+                        ))}
+                      </Menu>
+                    </div>
+                  ) : (
+                    <ListItem
+                      button
+                      key={dep}
+                      to={`/tlp/${dep}`}
+                      component={Link}
+                      style={{
+                        paddingTop: 0,
+                        paddingBottom: 0,
+                        color: "-webkit-link",
+                        textDecoration: "underline"
+                      }}
+                    >
+                      <ListItemText primary={dep} />
+                    </ListItem>
+                  )
+                )}
+            </List>
+          </Paper>
 
           <Typography variant="h6" style={{ marginBottom: 10 }}>
             Long Description
           </Typography>
-          <Grid container style={{ marginBottom: 10 }}>
-            <Grid item xs={12}>
-              <Paper
-                elevation={3}
-                style={{
-                  padding: 15,
-                  marginBottom: 10,
-                  backgroundColor: "#fbfbfe"
-                }}
-              >
-                <Typography variant="body1">{tlp.longdesc}</Typography>
-              </Paper>
-            </Grid>
-          </Grid>
+          <Paper
+            elevation={3}
+            style={{
+              padding: 15,
+              marginBottom: 20,
+              backgroundColor: "#fbfbfe"
+            }}
+          >
+            <Typography variant="body1">{tlp.longdesc}</Typography>
+          </Paper>
         </div>
       )}
     </div>
@@ -442,6 +338,39 @@ function Tlp(props) {
 }
 
 function App() {
+  const [all, setAll] = useState([]);
+
+  useEffect(() => {
+    const f = async () => {
+      const res = await fetch("/api/all");
+      res
+        .json()
+        .then(res => setAll(res))
+        .catch(err => console.log(err));
+    };
+    f();
+  }, [setAll]);
+
+  const packages = useMemo(() => {
+    return all.filter(tlp => tlp.category === "Package");
+  }, [all]);
+
+  const collections = useMemo(() => {
+    return all.filter(tlp => tlp.category === "Collection");
+  }, [all]);
+
+  const schemes = useMemo(() => {
+    return all.filter(tlp => tlp.category === "Scheme");
+  }, [all]);
+
+  const contexts = useMemo(() => {
+    return all.filter(tlp => tlp.category === "ConTeXt");
+  }, [all]);
+
+  const tlcores = useMemo(() => {
+    return all.filter(tlp => tlp.category === "TLCore");
+  }, [all]);
+
   const classes = useStyles();
 
   return (
@@ -450,12 +379,32 @@ function App() {
 
       <Switch>
         <Redirect exact from="/" to="/all" />
-        <Route exact path="/all" component={All} />
-        <Route exact path="/packages" component={Packages} />
-        <Route exact path="/collections" component={Collections} />
-        <Route exact path="/schemes" component={Schemes} />
-        <Route exact path="/contexts" component={ConTeXts} />
-        <Route exact path="/tlcores" component={TLCores} />
+        <Route exact path="/all" render={() => <All all={all} />} />
+        <Route
+          exact
+          path="/packages"
+          render={() => <Packages tlps={packages} />}
+        />
+        <Route
+          exact
+          path="/collections"
+          render={() => <Collections tlps={collections} />}
+        />
+        <Route
+          exact
+          path="/schemes"
+          render={() => <Schemes tlps={schemes} />}
+        />
+        <Route
+          exact
+          path="/contexts"
+          render={() => <ConTeXts tlps={contexts} />}
+        />
+        <Route
+          exact
+          path="/tlcores"
+          render={() => <TLCores tlps={tlcores} />}
+        />
         <Route exact path="/tlp/:name" component={Tlp} />
       </Switch>
     </div>
