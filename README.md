@@ -27,7 +27,7 @@ go get -u github.com/gin-gonic/contrib/static
 
 4. Build server:
 ```
-go build main.go
+go build
 ```
 
 5. Build client:
@@ -40,7 +40,7 @@ cd ..
 
 6. Run sever:
 ```
-./main
+./texlive-web
 ```
 
 Visit localhost:5000 and enjoy texlive-web!
