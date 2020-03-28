@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "TL Web",
+  "name": "TeX Live Web",
   "icons": [
     {
       "src": "favicon.svg",
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#1179b6",
   "background_color": "#ffffff"
 }
