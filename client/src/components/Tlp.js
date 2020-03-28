@@ -87,7 +87,7 @@ function Tlp(props) {
           </Typography>
 
           <div style={{ marginBottom: 10 }}>
-            <ButtonGroup variant="outlined">
+            <ButtonGroup variant="outlined" style={{ marginRight: 10 }}>
               {tlp.cataloguedata && tlp.cataloguedata["contact-home"] && (
                 <Button href={tlp.cataloguedata["contact-home"]}>
                   Homepage
