@@ -1,4 +1,5 @@
 # TeX Live Web
+![img](img/screenshot.png)
 
 This is a web-based TeX Live package (texlive.tlpdb) browser.
 This project is greatly inspired by msys2-web (https://github.com/msys2/msys2-web).
