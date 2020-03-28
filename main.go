@@ -242,7 +242,11 @@ func serve(db TLPDB, addr string) {
 			c.JSON(http.StatusOK, all)
 		})
 		api.GET("/tlp/:name", func(c *gin.Context) {
-			c.JSON(http.StatusOK, db.tlps[c.Param("name")])
+			if tlp, ok := db.tlps[c.Param("name")]; ok {
+				c.JSON(http.StatusOK, tlp)
+			} else {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request🍣️"})
+			}
 		})
 	}
 

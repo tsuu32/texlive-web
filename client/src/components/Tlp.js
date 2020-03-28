@@ -40,14 +40,20 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function Tlp(props) {
-  const [tlp, setTlp] = useState({});
+  const [tlp, setTlp] = useState();
 
   useEffect(() => {
     const f = async () => {
-      const res = await fetch(`/api/tlp/${props.match.params.name}`);
-      res
-        .json()
-        .then(res => setTlp(res))
+      fetch(`/api/tlp/${props.match.params.name}`)
+        .then(res => {
+          if (!res.ok) {
+            return res.json().then(err => {
+              throw Error(err.error);
+            });
+          }
+          return res.json();
+        })
+        .then(json => setTlp(json))
         .catch(err => console.log(err));
     };
     f();
@@ -68,7 +74,7 @@ function Tlp(props) {
   return (
     <div className={classes.main}>
       <div className={classes.toolbar} />
-      {tlp.name !== "" && (
+      {tlp && (
         <div className={classes.tlp}>
           <Typography variant="subtitle1">{tlp.category}</Typography>
           <Typography variant="h4" style={{ marginBottom: 5 }}>
