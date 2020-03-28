@@ -221,7 +221,7 @@ func serve(db TLPDB, addr string) {
 	{
 		api.GET("/", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{
-				"status": "☃️",
+				"status": "Ok☃️",
 			})
 		})
 		api.GET("/all", func(c *gin.Context) {
@@ -245,7 +245,7 @@ func serve(db TLPDB, addr string) {
 			if tlp, ok := db.tlps[c.Param("name")]; ok {
 				c.JSON(http.StatusOK, tlp)
 			} else {
-				c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request🍣️"})
+				c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid package name🍣️"})
 			}
 		})
 	}
