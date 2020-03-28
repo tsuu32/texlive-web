@@ -5,7 +5,7 @@ This project is greatly inspired by msys2-web (https://github.com/msys2/msys2-we
 
 
 
-## TRY THIS PERO
+## TRY THIS REPO
 To try this repo do following steps.
 
 1. Clone this repo:
