@@ -117,7 +117,12 @@ function NavBar() {
             />
           </Switch>
 
-          <Button color="inherit" href="https://www.tug.org/texlive/">
+          <Button
+            color="inherit"
+            href="https://www.tug.org/texlive/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Get TeX Live
           </Button>
         </Toolbar>
